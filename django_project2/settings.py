@@ -20,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4r@ro)-(jbi@a7e7e%k#m1!-kp-zh65_*bpod^-y%5i!iw2u(#'
+with open(os.path.join(BASE_DIR,'secret_key.txt')) as f:
+    SECRET_KEY=f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://post-coast-cad73a.netlify.app/', '127.0.0.1']
 
 
 # Application definition
@@ -35,8 +36,10 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
+    'storages',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -47,9 +50,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'django_project2.urls'
@@ -79,7 +84,8 @@ WSGI_APPLICATION = 'django_project2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+      
     }
 }
 
@@ -139,3 +145,17 @@ EMAIL_PORT='587'
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=os.environ.get('DB_USER')
 EMAIL_HOST_PASSWORD=os.environ.get('DB_PASS')
+
+AWS_ACCESS_ID=os.environ.get('AWS_ACCESS_ID')
+AWS_ACCESS_KEY=os.environ.get('AWS_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME=os.environ.get('AWS_S3_REGION_NAME')
+AWS_S3_SIGNATURE_VERSION='s3v4'
+AWS_S3_VERITY=True
+AWS_S3_ADDRESSING_STYLE = "virtual"
+
+AWS_S3_FILE_OVERWRITE=False
+AWS_DEFAULT_ACL=None
+DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+
+

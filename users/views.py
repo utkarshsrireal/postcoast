@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
-
+from django.conf import settings
 
 def register(request):
     if request.method == 'POST':
@@ -23,6 +23,7 @@ def user_logout(request):
 
 @login_required
 def profile(request):
+    print("Bucket Name:", settings.AWS_STORAGE_BUCKET_NAME)
     if request.method == 'POST':
         u_form= UserUpdateForm(request.POST, instance=request.user)
         p_form=ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
